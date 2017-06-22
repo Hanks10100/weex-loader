@@ -29,12 +29,11 @@ const defaultLoaders = {
   babel: loadBabelModule('babel-loader')
 }
 
-function loadBabelModule(moduleName) {
-  try{
-    let path=require.resolve(moduleName)
-    return path.slice(0,path.indexOf(moduleName)+moduleName.length)
-
-  }catch(e){
+function loadBabelModule (moduleName) {
+  try {
+    const filePath = require.resolve(moduleName)
+    return filePath.slice(0, filePath.lastIndexOf(moduleName) + moduleName.length)
+  } catch (e) {
     return moduleName
   }
 }
@@ -220,7 +219,7 @@ function loader (source) {
   const isElement = loaderQuery.element
   const isEntry = resourceQuery.entry
   const filename = path.relative('.', resourcePath)
-  const name = isEntry ? md5(filename) :
+  const name = isEntry ? md5(fs.readFileSync(filename)) :
                           (resourceQuery.name ||
                             getNameByPath(resourcePath))
 
